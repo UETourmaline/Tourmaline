@@ -169,4 +169,22 @@ public class PlaylistController : ControllerBase
         }
         return Ok();
     }
+    
+    [Route("api/[controller]/allFromUser/{username}")]
+    [HttpGet]
+    [AllowAnonymous]
+    public async Task<JsonResult> AllPlaylistsFromUser(string username)
+    {
+        var playlistList = await _connection.Read("playlist", new Dictionary<string, dynamic>() { { "user", username } },
+            new List<string> { "id", "name" });
+
+        if (playlistList == null)
+        {
+            return new JsonResult("Unable to fetch playlists from the requested users!") {
+                StatusCode = StatusCodes.Status500InternalServerError
+            };
+        }
+
+        return new JsonResult(playlistList);
+    }
 }
