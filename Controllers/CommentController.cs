@@ -33,6 +33,9 @@ namespace tourmaline.Controllers
 
         [Route("post")]
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> PostComment([FromForm] int id, [FromForm] string content)
         {
             if (await _songServices.DoesSongExist(id))
@@ -62,6 +65,10 @@ namespace tourmaline.Controllers
 
         [Route("remove/{commentId}")]
         [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult> DeleteComment(int commentId)
         {
             if (await _commentServices.DoesCommentExist(commentId))
@@ -84,6 +91,10 @@ namespace tourmaline.Controllers
 
         [Route("edit")]
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult> EditComment([FromForm] int id, [FromForm] string content)
         {
             if (await _commentServices.DoesCommentExist(id))
@@ -116,6 +127,8 @@ namespace tourmaline.Controllers
 
         [Route("getAllOnSong/{songId}")]
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
         public async Task<JsonResult> GetAllCommentsOnSong(int songId)
         {

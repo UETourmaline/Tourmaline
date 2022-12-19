@@ -25,6 +25,8 @@ public class PlaylistController : ControllerBase
     private string CurrentSessionUsername => HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
     [Route("get")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [HttpGet]
     public async Task<ActionResult<Playlist>> GetPlaylist(int id)
     {
@@ -38,6 +40,8 @@ public class PlaylistController : ControllerBase
 
     [Route("getCover")]
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [AllowAnonymous]
     public async Task<ActionResult> GetCover(int id)
     {
@@ -66,6 +70,7 @@ public class PlaylistController : ControllerBase
 
     [Route("create")]
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<Playlist>> CreatePlaylist([FromForm] string name, [FromForm] string? description,
         [FromForm] IFormFile? cover)
     {
@@ -92,6 +97,9 @@ public class PlaylistController : ControllerBase
 
     [Route("delete")]
     [HttpDelete]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> DeletePlaylist(int id)
     {
         if (!await _playlistServices.DoesPlaylistExist(id))
@@ -118,6 +126,7 @@ public class PlaylistController : ControllerBase
 
     [HttpPost]
     [Route("edit")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> EditPlaylist([FromForm] int id, [FromForm] string? name, [FromForm] string? description,
         [FromForm] IFormFile? file)
     {
@@ -138,6 +147,8 @@ public class PlaylistController : ControllerBase
 
     [Route("add")]
     [HttpPut]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> AddToPlaylist(int songId, int playlistId)
     {
         if (!await _songServices.DoesSongExist(songId))
@@ -150,6 +161,8 @@ public class PlaylistController : ControllerBase
 
     [Route("remove")]
     [HttpDelete]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult> RemoveFromPlaylist(int songId, int playlistId)
     {
         if (!await _playlistServices.DoesPlaylistExist(playlistId))

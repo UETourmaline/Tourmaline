@@ -29,6 +29,8 @@ public class SongController : ControllerBase
 
     [HttpGet]
     [Route("get")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [AllowAnonymous]
     public async Task<ActionResult<Song>> GetSongInfo(int id)
     {
@@ -42,6 +44,8 @@ public class SongController : ControllerBase
 
     [HttpGet]
     [Route("getMedia")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [AllowAnonymous]
     public async Task<ActionResult> GetMedia(int id)
     {
@@ -64,6 +68,8 @@ public class SongController : ControllerBase
 
     [HttpGet]
     [Route("getCover")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [AllowAnonymous]
     public async Task<ActionResult> GetCover(int id)
     {
@@ -77,11 +83,12 @@ public class SongController : ControllerBase
 
         return File(file, "image/png", true);
     }
-
-    [HttpPost("FileUpload")]
+    
+    [HttpPost]
     [Route("upload")]
-    [DataType("multipart/formdata")]
-    public async Task<ActionResult> UploadSong([FromForm] IFormFile media, [FromForm] IFormFile cover,
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
+    public async Task<ActionResult> UploadSong(IFormFile media, IFormFile cover,
         [FromForm] string name, [FromForm] string? description, [FromForm] string? tags)
     {
         if (media.Length <= 0 || cover.Length <= 0) return StatusCode(StatusCodes.Status406NotAcceptable);
@@ -93,19 +100,19 @@ public class SongController : ControllerBase
         var filePath = Path.Combine($"{homeDir}/storage/song/media", fileName);
         var imageName = $"{id}.png";
         var imagePath = Path.Combine($"{homeDir}/storage/song/cover", imageName);
-
+        
         await using (var stream = new FileStream(filePath, FileMode.Create))
         {
             await media.CopyToAsync(stream);
         }
-
+        
         await using (var stream = new FileStream(imagePath, FileMode.Create))
         {
             await cover.CopyToAsync(stream);
         }
-
+        
         var duration = TimeSpan.Zero;
-
+        
         try
         {
             duration = (await FFProbe.AnalyseAsync(filePath)).Duration;
@@ -114,7 +121,7 @@ public class SongController : ControllerBase
         {
             Console.WriteLine(ex);
         }
-
+        // ----------
         // var songTags = new List<string>()
         // {
         //     "Lofi",
@@ -129,6 +136,7 @@ public class SongController : ControllerBase
         // };
         // songTags.Shuffle();
         // var tags = songTags.Take(new Random().Next(1, 9)).ToList();
+        // ---- 
         await _songServices.AddSong(new Song(id: id)
         {
             Name = name,
@@ -144,6 +152,8 @@ public class SongController : ControllerBase
 
     [HttpPut]
     [Route("edit")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> EditSong([FromForm] int id, [FromForm] string? name, [FromForm] string? description, [FromForm] string? tags, [FromForm] IFormFile? cover)
     {
         if (!await _songServices.DoesSongExist(id))
@@ -166,6 +176,9 @@ public class SongController : ControllerBase
 
     [HttpDelete]
     [Route("delete")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> DeleteSong(int id)
     {
         if (!await _songServices.DoesSongExist(id))
@@ -189,6 +202,8 @@ public class SongController : ControllerBase
     [HttpGet]
     [AllowAnonymous]
     [Route("getUploaded")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserUploads>> GetSongs(string username)
     {
         if (!await _userServices.DoesUserExist(username))
@@ -201,6 +216,8 @@ public class SongController : ControllerBase
 
     [HttpGet]
     [Route("autoplay")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Song>> GetNextSongAutoplay(int id) // previous song id
     {
         if (!await _songServices.DoesSongExist(id))

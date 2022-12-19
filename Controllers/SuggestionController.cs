@@ -48,6 +48,8 @@ public class SuggestionController : ControllerBase
 
     [Route("getRecentPlays")]
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<Song>>> GetRecentlyPlayed()
     {
         if (Username == null)
@@ -60,6 +62,8 @@ public class SuggestionController : ControllerBase
 
     [Route("getRecentlyUploaded")]
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<Song>>> GetRecentlyUploaded()
     {
         if (Username == null)
@@ -72,6 +76,8 @@ public class SuggestionController : ControllerBase
 
     [Route("getRelatedArtist")]
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<User>>> GetRelatedArtist()
     {
         if (Username == null)
@@ -84,6 +90,8 @@ public class SuggestionController : ControllerBase
 
     [Route("getSuggestion")]
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<Song>>> GetSuggestion()
     {
         if (Username == null)
