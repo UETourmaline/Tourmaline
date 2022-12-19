@@ -32,6 +32,8 @@ public class UserController : ControllerBase
 
     [Route("getUser/{username}")]
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [AllowAnonymous]
     public async Task<ActionResult<User>> GetUser(string username)
     {
@@ -45,6 +47,8 @@ public class UserController : ControllerBase
 
     [HttpGet]
     [Route("getAvatar")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
     [AllowAnonymous]
     public async Task<ActionResult> GetAvatar(string username)
     {
@@ -71,6 +75,8 @@ public class UserController : ControllerBase
 
     [HttpPost]
     [Route("signup")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
     [AllowAnonymous]
     public async Task<ActionResult> SignUp([FromForm] string username, [FromForm] string password,
         [FromForm] string fullname, [FromForm] bool gender, [FromForm] string email)
@@ -93,6 +99,8 @@ public class UserController : ControllerBase
 
     [HttpPut]
     [Route("edit")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult> EditProfile([FromForm] string? name, [FromForm] string? bio,
         [FromForm] bool? gender, [FromForm] string? email, [FromForm] DateTime? birth, [FromForm] IFormFile? avatar)
     {
@@ -117,6 +125,9 @@ public class UserController : ControllerBase
 
     [HttpPost]
     [Route("login")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status406NotAcceptable)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [AllowAnonymous]
     public async Task<ActionResult> Login([FromForm] LoginModel loginModel)
     {
@@ -155,6 +166,8 @@ public class UserController : ControllerBase
 
     [HttpPost]
     [Route("changepwd")]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
     public async Task<ActionResult> ChangePassword([FromForm] string username, [FromForm] string oldPassword,
         [FromForm] string newPassword)
     {

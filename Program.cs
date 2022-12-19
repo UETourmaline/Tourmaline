@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using tourmaline.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,27 @@ var configuration = builder.Configuration;
 // Add services to the container.
 
 services.AddControllersWithViews();
+services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Tourmaline v1",
+        Description = "API document for Tourmaline App Development",
+        TermsOfService = new Uri("https://example.com/terms"),
+        Contact = new OpenApiContact
+        {
+            Name = "UETourmaline",
+            Url = new Uri("https://example.com/contact")
+        },
+        License = new OpenApiLicense
+        {
+            Name = "License",
+            Url = new Uri("https://example.com/license")
+        }
+    });
+    
+});
 services.Configure<FormOptions>(options => { options.MemoryBufferThreshold = int.MaxValue; });
 services.AddCors(o => o.AddPolicy("AllowLocalDebug",
     b =>
@@ -82,5 +104,10 @@ app.MapControllerRoute(
     "{controller}/{action=Index}/{id?}");
 
 app.MapFallbackToFile("index.html");
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Tourmaline API");
+});
 
 app.Run();

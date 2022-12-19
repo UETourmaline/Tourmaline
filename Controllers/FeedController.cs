@@ -25,6 +25,8 @@ namespace tourmaline.Controllers
 
         [HttpGet]
         [Route("")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<Song>>> GetFeed()
         {
             if (CurrentSessionUsername == null)

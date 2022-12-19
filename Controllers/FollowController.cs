@@ -23,6 +23,8 @@ namespace tourmaline.Controllers
 
         [Route("add")]
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> Follow(string username)
         {
             if (CurrentSessionUsername == username || !await _userServices.DoesUserExist(username))
@@ -35,6 +37,8 @@ namespace tourmaline.Controllers
 
         [Route("remove")]
         [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> Unfollow(string username)
         {
             if (CurrentSessionUsername == username || !await _userServices.DoesUserExist(username))
@@ -48,6 +52,8 @@ namespace tourmaline.Controllers
 
         [Route("followers")]
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
         public async Task<ActionResult<List<User>>> GetFollowers(string username)
         {
@@ -60,6 +66,8 @@ namespace tourmaline.Controllers
         
         [Route("followings")]
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
         public async Task<ActionResult<List<User>>> GetFollowings(string username)
         {
