@@ -135,6 +135,7 @@ function Song({ songData, inPlaylist, pid }) {
     }, []);
     useEffect(() => {
         let indexOfMenu = -1;
+        Array.isArray(songMenu) &&
         songMenu.forEach((item, index) => {
             if (item.type == 'editSong') {
                 indexOfMenu = index;
